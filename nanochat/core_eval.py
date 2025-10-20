@@ -90,7 +90,7 @@ def find_common_length(token_sequences, direction='left'):
     """
     min_len = min(len(seq) for seq in token_sequences)
     indices = {
-        'left': range(min_len),
+        'left': range(int(min_len)),
         'right': range(-1, -min_len-1, -1)
     }[direction]
     # Find the first position where the token sequences differ
@@ -250,7 +250,7 @@ def evaluate_task(model, tokenizer, data, device, task_meta):
     world_size = dist.get_world_size() if dist.is_initialized() else 1
     correct = torch.zeros(len(data), dtype=torch.float32, device=device)
     # stride the examples to each rank
-    for idx in range(rank, len(data), world_size):
+    for idx in range(int(rank), len(data), world_size):
         is_correct = evaluate_example(idx, model, tokenizer, data, device, task_meta)
         correct[idx] = float(is_correct)
     # sync results across all the processes if running distributed

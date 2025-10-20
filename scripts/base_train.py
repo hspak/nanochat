@@ -169,7 +169,7 @@ smooth_train_loss = 0 # EMA of training loss
 ema_beta = 0.9 # EMA decay factor
 total_training_time = 0 # total wall-clock time of training
 # note that we run +1 steps only so that we can eval and save at the end
-for step in range(num_iterations + 1):
+for step in range(int(num_iterations) + 1):
     last_step = step == num_iterations
     flops_so_far = num_flops_per_token * total_batch_size * step
 
@@ -254,7 +254,7 @@ for step in range(num_iterations + 1):
     # evaluate the gradient
     torch.cuda.synchronize()
     t0 = time.time()
-    for micro_step in range(grad_accum_steps):
+    for micro_step in range(int(grad_accum_steps)):
         with autocast_ctx:
             loss = model(x, y)
         train_loss = loss.detach() # for logging
