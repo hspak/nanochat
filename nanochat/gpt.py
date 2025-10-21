@@ -157,7 +157,7 @@ class GPT(nn.Module):
         self.config = config
         self.transformer = nn.ModuleDict({
             "wte": nn.Embedding(config.vocab_size, config.n_embd),
-            "h": nn.ModuleList([Block(config, layer_idx) for layer_idx in range(config.n_layer)]),
+            "h": nn.ModuleList([Block(config, layer_idx) for layer_idx in range(int(config.n_layer))]),
         })
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
         # To support meta device initialization, we init the rotary embeddings here, but it's fake
@@ -305,7 +305,7 @@ class GPT(nn.Module):
             rng = torch.Generator(device=device)
             rng.manual_seed(seed)
         ids = torch.tensor([tokens], dtype=torch.long, device=device) # add batch dim
-        for _ in range(max_tokens):
+        for _ in range(int(max_tokens)):
             logits = self.forward(ids) # (B, T, vocab_size)
             logits = logits[:, -1, :] # (B, vocab_size)
             if top_k is not None:

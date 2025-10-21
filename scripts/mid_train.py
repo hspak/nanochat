@@ -33,16 +33,16 @@ run = "dummy" # wandb run name default ("dummy" is special - we won't log to wan
 model_tag = None # model tag to load the model from (base model or midtrained model)
 step = None # step to load the model from (base model or midtrained model)
 dtype = "bfloat16"
-max_seq_len = 2048
-device_batch_size = 32
+max_seq_len = 1024
+device_batch_size = 64 # per-device batch size (set to not OOM)
 unembedding_lr = 0.004
 embedding_lr = 0.2
 matrix_lr = 0.02
 init_lr_frac = 1.0 # initial learning rate is this fraction of the base learning rate
 weight_decay = 0.0
 eval_every = 150
-eval_tokens = 20*524288
-total_batch_size = 524288
+eval_tokens = 20*524288/8
+total_batch_size = 524288/8
 dry_run = 0 # dry_run=1 is for experiments: we will log to wandb but we won't write checkpoints or report
 config_keys = [k for k,v in globals().items() if not k.startswith('_') and isinstance(v, (int, float, bool, str))]
 exec(open(os.path.join('nanochat', 'configurator.py')).read()) # overrides from command line or config file
